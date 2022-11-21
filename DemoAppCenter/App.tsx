@@ -15,7 +15,6 @@ import {
   StatusBar,
   StyleSheet,
   Text,
-  useColorScheme,
   View,
 } from 'react-native';
 
@@ -27,12 +26,15 @@ import {
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 
+import {REACT_APP_APP_THEME} from '@env';
+
+const isDarkMode = REACT_APP_APP_THEME === 'DARK';
+
 const Section: React.FC<
   PropsWithChildren<{
     title: string;
   }>
 > = ({children, title}) => {
-  const isDarkMode = useColorScheme() === 'dark';
   return (
     <View style={styles.sectionContainer}>
       <Text
@@ -58,8 +60,6 @@ const Section: React.FC<
 };
 
 const App = () => {
-  const isDarkMode = useColorScheme() === 'dark';
-
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
