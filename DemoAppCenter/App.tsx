@@ -8,8 +8,9 @@
  * @format
  */
 
-import React, {PropsWithChildren} from 'react';
+import React, {PropsWithChildren, useCallback} from 'react';
 import {
+  Button,
   SafeAreaView,
   ScrollView,
   StatusBar,
@@ -17,14 +18,10 @@ import {
   Text,
   View,
 } from 'react-native';
+import Crashes from 'appcenter-crashes';
+import Analytics from 'appcenter-analytics';
 
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
+import {Colors} from 'react-native/Libraries/NewAppScreen';
 
 import {REACT_APP_APP_THEME} from '@env';
 
@@ -46,15 +43,7 @@ const Section: React.FC<
         ]}>
         {title}
       </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
+      {children}
     </View>
   );
 };
@@ -63,6 +52,22 @@ const App = () => {
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
+
+  const handleTestCrash = useCallback(() => {
+    Crashes.generateTestCrash();
+  }, []);
+
+  const handleTestError = useCallback(() => {
+    throw new Error('This is a test error!');
+  }, []);
+
+  const handleTestEventOne = useCallback(() => {
+    Analytics.trackEvent('Track event one');
+  }, []);
+
+  const handleTestEventTwo = useCallback(() => {
+    Analytics.trackEvent('Track event two', {property: 'property 1'});
+  }, []);
 
   return (
     <SafeAreaView style={backgroundStyle}>
@@ -73,26 +78,23 @@ const App = () => {
       <ScrollView
         contentInsetAdjustmentBehavior="automatic"
         style={backgroundStyle}>
-        <Header />
         <View
           style={{
             backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}>
-          <Section title="Step One">
-            Edit <Text style={styles.highlight}>App.tsx</Text> to change this
-            screen and then come back to see your edits.
-          </Section>
-          <Section title="See Your Changes">
-            <ReloadInstructions />
-          </Section>
-          <Section title="Debug">
-            <DebugInstructions />
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          <LearnMoreLinks />
-        </View>
+          }}
+        />
+        <Section title="Test Diagnostics">
+          <Button title="Test crash app" onPress={handleTestCrash} />
+          <View style={styles.sectionBtn}>
+            <Button title="Test error" onPress={handleTestError} />
+          </View>
+        </Section>
+        <Section title="Test analytics event">
+          <Button title="Test event one" onPress={handleTestEventOne} />
+          <View style={styles.sectionBtn}>
+            <Button title="Test event two" onPress={handleTestEventTwo} />
+          </View>
+        </Section>
       </ScrollView>
     </SafeAreaView>
   );
@@ -102,15 +104,15 @@ const styles = StyleSheet.create({
   sectionContainer: {
     marginTop: 32,
     paddingHorizontal: 24,
+    paddingVertical: 10,
   },
   sectionTitle: {
     fontSize: 24,
     fontWeight: '600',
+    marginBottom: 10,
   },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
+  sectionBtn: {
+    marginTop: 10,
   },
   highlight: {
     fontWeight: '700',
