@@ -20,12 +20,14 @@ import {
 } from 'react-native';
 import Crashes from 'appcenter-crashes';
 import Analytics from 'appcenter-analytics';
+import codePush from 'react-native-code-push';
 
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 
 import {REACT_APP_APP_THEME} from '@env';
 
 const isDarkMode = REACT_APP_APP_THEME === 'DARK';
+let codePushOptions = {checkFrequency: codePush.CheckFrequency.ON_APP_RESUME};
 
 const Section: React.FC<
   PropsWithChildren<{
@@ -119,4 +121,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default App;
+export default codePush(codePushOptions)(App);
