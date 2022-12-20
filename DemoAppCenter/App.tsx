@@ -26,8 +26,8 @@ import {Colors} from 'react-native/Libraries/NewAppScreen';
 
 import {REACT_APP_APP_THEME} from '@env';
 
-const isDarkMode = REACT_APP_APP_THEME === 'LIGHT';
-let codePushOptions = {checkFrequency: codePush.CheckFrequency.MANUAL};
+const isDarkMode = REACT_APP_APP_THEME === 'DARK';
+let codePushOptions = {checkFrequency: codePush.CheckFrequency.ON_APP_RESUME};
 
 const Section: React.FC<
   PropsWithChildren<{
@@ -72,14 +72,14 @@ const App = () => {
     Analytics.trackEvent('Track event two', {property: 'property 1'});
   }, []);
 
-  const handleCheckUpdate = useCallback(() => {
-    codePush.sync({
-      updateDialog: {
-        title: 'Update new version from CodePush',
-      },
-      installMode: codePush.InstallMode.IMMEDIATE,
-    });
-  }, []);
+  // const handleCheckUpdate = useCallback(() => {
+  //   codePush.sync({
+  //     updateDialog: {
+  //       title: 'Update new version from CodePush',
+  //     },
+  //     installMode: codePush.InstallMode.IMMEDIATE,
+  //   });
+  // }, []);
 
   return (
     <SafeAreaView style={backgroundStyle}>
@@ -108,9 +108,9 @@ const App = () => {
           </View>
         </Section>
 
-        <Section title="Test CodePush">
-          <Button title="Check for updates" onPress={handleCheckUpdate} />
-        </Section>
+        {/* <Section title="Test CodePush">
+          <Button title="Check for new updates" onPress={handleCheckUpdate} />
+        </Section> */}
       </ScrollView>
     </SafeAreaView>
   );
